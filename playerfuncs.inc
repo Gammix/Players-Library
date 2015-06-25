@@ -152,17 +152,15 @@ stock IsPlayerBehindPlayer(playerid, targetid, Float:range = 10.0)
 
 stock GetPlayerWeaponAmmo(playerid, weaponid)
 {
-	new current_weapon = GetPlayerWeapon(playerid);
-
-    new ammo = 0;
-
-	SetPlayerArmedWeapon(playerid, weaponid);
-	if(GetPlayerWeapon(playerid) == weaponid)
- 	{
-		ammo = GetPlayerAmmo(playerid);
+	new w, a;
+	for(new i; i < 13; i++)
+	{
+	    GetPlayerWeaponData(playerid, i, w, a);
+	    if(w == weaponid)
+	    {
+	        return a;
+	    }
 	}
-
-	SetPlayerArmedWeapon(playerid, current_weapon);
 	return ammo;
 }
 
@@ -173,15 +171,14 @@ stock SetPlayerWeaponAmmo(playerid, weaponid, ammo)
 
 stock IsPlayerHavingWeapon(playerid, weaponid)
 {
-	new current_weapon = GetPlayerWeapon(playerid);
-
-	if(SetPlayerArmedWeapon(playerid, weaponid))
+	new w, a;
+	for(new i; i < 13; i++)
 	{
-	    if(GetPlayerWeapon(playerid) == weaponid)
+	    GetPlayerWeaponData(playerid, i, w, a);
+	    if(w == weaponid)
 	    {
-			SetPlayerArmedWeapon(playerid, current_weapon);
-			return true;
-		}
+	        return true;
+	    }
 	}
 	return false;
 }
@@ -215,7 +212,7 @@ public OnPlayerConnect(playerid)
 {
     gWalkingStyle[playerid] = WALKING_STYLE_DEFAULT;
     for(new i; i < 11; i++) gPlayerSkills[playerid][i] = 0;
-    
+
     #if defined FUNCS_OnPlayerConnect
        	return FUNCS_OnPlayerConnect(playerid);
 	#else
@@ -311,7 +308,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			}
 		}
 	}
-	
+
 	#if defined FUNCS_OnPlayerKeyStateChange
        	return FUNCS_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
 	#else
